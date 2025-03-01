@@ -5,7 +5,7 @@ def timer():
     st.title("Task Timer")
 
     all_tasks = st.session_state.tasks
-    st.write(all_tasks)
+    
     if not all_tasks:
         st.warning("No tasks available. Please add tasks in 'Task Management' or import data.")
     else:

@@ -29,7 +29,7 @@ if st.sidebar.button("Timer"):
 
 
 if "page" not in st.session_state:
-    st.session_state.page = "Task Manager"
+    st.session_state.page = "Home"
 
 # Home page
 if st.session_state.page == "Home":
