@@ -1,4 +1,7 @@
 pandas==2.0.0
+psycopg2==2.9.10
+python-dotenv==1.0.1
 streamlit==1.42.2
 streamlit-extras==0.5.5
+
 

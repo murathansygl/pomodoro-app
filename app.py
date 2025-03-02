@@ -1,12 +1,30 @@
 import streamlit as st
-
+import psycopg2
+import os
 import pandas as pd
 from streamlit_extras.bottom_container import bottom
 from timer import timer
 from task_manager import task_manager
 from home import home
+from utils import read_data
+from dotenv import load_dotenv
+
+load_dotenv()
+
+conn = psycopg2.connect(
+    dbname=os.environ.get("POSTGRES_DB"),
+    user=os.environ.get("POSTGRES_USER"),
+    password=os.environ.get("POSTGRES_PASSWORD"),
+    host=os.environ.get("POSTGRES_HOST"),
+    port=os.environ.get("POSTGRES_PORT")
+)
+
+cursor = conn.cursor()
+cursor.execute("CREATE TABLE IF NOT EXISTS pomodoro (task TEXT, duration INTEGER)")
+conn.commit()
 
 # Initialize session state variables
+st.session_state.tasks = read_data(conn)
 if "tasks" not in st.session_state:
     st.session_state.tasks = {}
 if "selected_task" not in st.session_state:
@@ -37,8 +55,8 @@ if st.session_state.page == "Home":
 
 # Timer page
 if st.session_state.page == "Timer":
-    timer()
+    timer(conn)
 
 # Task Manager page
 if st.session_state.page == "Task Manager":
-    task_manager()
+    task_manager(conn)

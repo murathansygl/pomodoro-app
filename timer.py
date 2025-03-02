@@ -1,7 +1,8 @@
 import streamlit as st
 import time
 from streamlit_extras.bottom_container import bottom
-def timer():
+from utils import update_data
+def timer(conn):
     st.title("Task Timer")
 
     all_tasks = st.session_state.tasks
@@ -59,7 +60,7 @@ def timer():
 
             # Log the time after completion
             st.session_state.timer_running = False
-            st.session_state.tasks[selected_task] += total_seconds # // 60
+            update_data(conn, selected_task, total_seconds)
             # st.rerun()
             st.success(f"Time logged for {selected_task}: {total_seconds // 60} minutes")
             
