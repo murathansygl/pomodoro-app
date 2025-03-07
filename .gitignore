@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Firebase
+firebase_creds.json
+
 # Distribution / packaging
 .Python
 build/
@@ -131,7 +134,7 @@ celerybeat.pid
 .env
 .venv
 env/
-venv-pomodoro/
+venv_pomodoro/
 ENV/
 env.bak/
 venv.bak/

@@ -8,23 +8,33 @@ from task_manager import task_manager
 from home import home
 from utils import read_data
 from dotenv import load_dotenv
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+cred = credentials.Certificate("firebase_creds.json")
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
+    # Firestore database instance
+db = firestore.client()
 
 load_dotenv()
 
-conn = psycopg2.connect(
-    dbname=os.environ.get("POSTGRES_DB"),
-    user=os.environ.get("POSTGRES_USER"),
-    password=os.environ.get("POSTGRES_PASSWORD"),
-    host=os.environ.get("POSTGRES_HOST"),
-    port=os.environ.get("POSTGRES_PORT")
-)
+# conn = psycopg2.connect(
+#     dbname=os.environ.get("POSTGRES_DB"),
+#     user=os.environ.get("POSTGRES_USER"),
+#     password=os.environ.get("POSTGRES_PASSWORD"),
+#     host=os.environ.get("POSTGRES_HOST"),
+#     port=os.environ.get("POSTGRES_PORT")
+# )
 
-cursor = conn.cursor()
-cursor.execute("CREATE TABLE IF NOT EXISTS pomodoro (task TEXT, duration INTEGER)")
-conn.commit()
+# cursor = conn.cursor()
+# cursor.execute("CREATE TABLE IF NOT EXISTS pomodoro (task TEXT, duration INTEGER)")
+# conn.commit()
 
 # Initialize session state variables
-st.session_state.tasks = read_data(conn)
+data = read_data(db)
+st.session_state.tasks = {item["task"]: item["duration"] for item in data}
+
 if "tasks" not in st.session_state:
     st.session_state.tasks = {}
 if "selected_task" not in st.session_state:
@@ -55,8 +65,8 @@ if st.session_state.page == "Home":
 
 # Timer page
 if st.session_state.page == "Timer":
-    timer(conn)
+    timer(db)
 
 # Task Manager page
 if st.session_state.page == "Task Manager":
-    task_manager(conn)
+    task_manager(db)
