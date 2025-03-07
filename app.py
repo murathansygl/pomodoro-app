@@ -25,7 +25,7 @@ if st.session_state.authenticated:
     # Initialize session state variables
     data = read_data(db, st.session_state.user_uid)
     st.session_state.tasks = {item.get('task'): item.get('duration') for item in data}
-    st.write(st.session_state.tasks)
+
     if "tasks" not in st.session_state:
         st.session_state.tasks = {}
     if "selected_task" not in st.session_state:
