@@ -1,14 +1,15 @@
 import streamlit as st
 import pandas as pd
 from streamlit_extras.bottom_container import bottom
-from utils import read_data, insert_data, update_data, delete_data
+from utils import insert_data, update_data, delete_data
+
 def task_manager(conn):
 
     st.title("Task Management")
     task_name = st.text_input("Enter a new task:")
     if st.button("Add Task"):
         if task_name and task_name not in st.session_state.tasks:
-            insert_data(conn=conn, task=task_name, duration=0)
+            insert_data(conn=conn, user_uid=st.session_state.user_uid, task=task_name, duration=0)
             st.success(f"Task '{task_name}' added.")
         elif task_name in st.session_state.tasks:
             st.warning("Task already exists.")
@@ -38,7 +39,7 @@ def task_manager(conn):
                     new_task_name = col1.text_input("Edit Task", task, key=f"edit_{task}")
                     if col1.button("Save", key=f"save_{task}"):
                         if new_task_name and new_task_name != task:
-                            update_data(conn=conn, task=task, new_task_name=new_task_name)
+                            update_data(conn=conn, user_uid=st.session_state.user_uid, task=task, new_task_name=new_task_name)
                             st.session_state[f"editing_{new_task_name}"] = st.session_state.pop(f"editing_{task}")
                             st.success(f"Task '{task}' renamed to '{new_task_name}'.")
                         st.session_state[f"editing_{new_task_name}"] = False
@@ -49,7 +50,7 @@ def task_manager(conn):
                     col1.warning(f"Are you sure you want to delete '{task}'?")
                 
                     if col2.button("Delete", key=f"delete_{task}"):
-                        delete_data(conn, task)
+                        delete_data(conn, st.session_state.user_uid, task)
                         st.success(f"Task '{task}' deleted.")
                         st.rerun()
 
