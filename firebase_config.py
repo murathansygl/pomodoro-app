@@ -4,8 +4,8 @@ from firebase_admin import credentials, auth
 import pyrebase
 from dotenv import load_dotenv
 import os
-
-load_dotenv()
+import io
+load_dotenv(override=True)
 # Load Firebase credentials (use a service account for admin actions)
 firebase_config = {
     "apiKey": os.environ.get("apiKey"),
@@ -17,9 +17,11 @@ firebase_config = {
     "appId": os.environ.get("apiKappIdy"),
 }
 
+firebase_creds = os.getenv("FIREBASE_CONFIG")
 # Initialize Firebase Admin SDK (for server-side actions)
 if not firebase_admin._apps:
-    cred = credentials.Certificate("firebase_creds.json")
+    creds_dict = json.loads(firebase_creds)
+    cred = credentials.Certificate(creds_dict)
     firebase_admin.initialize_app(cred)
 
 # Initialize Pyrebase (for client-side authentication)

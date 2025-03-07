@@ -1,0 +1,8 @@
+__pycache__/
+.vscode/
+venv_pomodoro/
+*.pyc
+.DS_Store
+.env
+.gitignore
+README.md
